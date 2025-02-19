@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SquareComponent } from '../square/square.component';
 
 @Component({
   selector: 'app-gameboard',
-  standalone: true,
-  imports: [CommonModule, SquareComponent],
   templateUrl: './gameboard.component.html',
   styleUrl: './gameboard.component.scss',
 })
