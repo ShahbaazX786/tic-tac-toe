@@ -3,6 +3,6 @@
 
 <h2 *ngIf="winner">Player {{winner}} Won The Game!!</h2>
 
-<main class="board-border">
+<main>
     <app-square *ngFor="let item of squares; let i = index" [value]="item" (click)="makeAMove(i)"></app-square>
 </main>
