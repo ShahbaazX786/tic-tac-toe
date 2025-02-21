@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { GameStateType, updateGameStateType } from './../types';
 
 @Component({
   selector: 'app-gameboard',
@@ -10,16 +12,49 @@ export class GameboardComponent implements OnInit {
   isXNext: boolean = false;
   winner: string = '';
   gameOn: boolean = false;
+  gameData = new BehaviorSubject({});
+  tileToggle = false;
 
   ngOnInit(): void {
-    this.beginNewGame();
+    this.initializeGame();
+  }
+
+  initializeGame() {
+    this.gameData.next({
+      gameOn: false,
+      winner: [],
+      currentGame: 0,
+      highScore: 0,
+    });
   }
 
   beginNewGame() {
     this.gameOn = true;
     this.squares = Array(9).fill(null);
     this.winner = '';
-    this.isXNext = true;
+    this.isXNext = Math.random() < 0.5;
+    this.updateGameState({ gameOn: this.gameOn });
+  }
+
+  updateGameState({
+    gameOn,
+    winner,
+    currentGame,
+    highScore,
+  }: updateGameStateType) {
+    const currentData: GameStateType =
+      this.gameData.getValue() as GameStateType;
+
+    const updatedWinners = winner
+      ? currentData?.winners!.push(winner)
+      : currentData.winners;
+
+    this.gameData.next({
+      gameOn,
+      winner: updatedWinners,
+      currentGame,
+      highScore,
+    });
   }
 
   get currentPlayer() {
@@ -58,6 +93,6 @@ export class GameboardComponent implements OnInit {
   }
 
   trackByFn(index: number, item: any): number {
-    return index; // Keeps the element identity stable
+    return index;
   }
 }
