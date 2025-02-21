@@ -2,9 +2,19 @@ main {
   display: grid;
   grid-template-columns: 200px 200px 200px;
   grid-gap: 0;
+  background: #022b3a;
+  width: 600px;
+  height: 600px;
 }
 
 app-square {
   border: 1px solid gray;
   height: 200px;
+  width: 200px;
+  border-radius: 10px;
+}
+
+.board-border{
+  border: 20px solid brown;
+  border-radius: 10px;
 }
