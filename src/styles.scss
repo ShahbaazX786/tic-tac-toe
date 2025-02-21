@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+.centered {
+  display: grid;
+  place-items: center;
+}
+
+.w-full{
+  width: 100%;
+}
