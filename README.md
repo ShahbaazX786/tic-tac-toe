@@ -4,6 +4,8 @@
 
 Tic Tac Toe made using angular and combiation of nebular library with pwa so that it can run offline as well as mostly it is event driven (client oriented app).
 
+> Hosted URL: https://angular-pwa-ec94a.web.app/
+
 ## Overview
 
 ![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
