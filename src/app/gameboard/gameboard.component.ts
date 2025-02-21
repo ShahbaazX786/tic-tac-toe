@@ -9,12 +9,14 @@ export class GameboardComponent implements OnInit {
   squares: any[] = [];
   isXNext: boolean = false;
   winner: string = '';
+  gameOn: boolean = false;
 
   ngOnInit(): void {
     this.beginNewGame();
   }
 
   beginNewGame() {
+    this.gameOn = true;
     this.squares = Array(9).fill(null);
     this.winner = '';
     this.isXNext = true;
