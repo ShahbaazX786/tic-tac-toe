@@ -36,7 +36,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "src/styles.scss",
+              "node_modules/@nebular/theme/styles/prebuilt/cosmic.scss"
+            ],
             "scripts": []
           },
           "configurations": {
