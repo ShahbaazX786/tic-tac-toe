@@ -2,7 +2,7 @@
   <h1 *ngIf="gameOn">Current Player: {{currentPlayer}}</h1>
   <button (click)="beginNewGame()" nbButton outline status="danger" class="w-full" *ngIf="!gameOn" >Let's Play a new game</button>
 
-  <h2 *ngIf="winner">Player {{winner}} Won The Game!!</h2>
+  <h2 *ngIf="winner" [class.shake]="winner">Player {{winner}} Won The Game!!</h2>
 
   <main *ngIf="gameOn">
     <app-square *ngFor="let item of squares; let i = index;  trackBy: trackByFn" [value]="item"
