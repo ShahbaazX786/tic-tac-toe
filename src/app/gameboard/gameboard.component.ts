@@ -62,11 +62,26 @@ export class GameboardComponent implements OnInit {
   }
 
   makeAMove(index: number) {
+    this.placeTileSound();
     if (!this.squares[index]) {
       this.squares[index] = this.currentPlayer;
       this.isXNext = !this.isXNext;
     }
     this.winner = this.getWinner();
+
+    if (this.winner) {
+      this.updateGameState({ gameOn: this.gameOn, winner: this.winner });
+    }
+  }
+
+  placeTileSound() {
+    const audioFile = this.tileToggle
+      ? '/audio/tile-1.mp3'
+      : '/audio/tile-2.mp3';
+    const audio = new Audio(audioFile);
+    audio.load();
+    audio.play().catch((error) => console.error('Audio play failed:', error));
+    this.tileToggle = !this.tileToggle;
   }
 
   getWinner() {
@@ -77,6 +92,7 @@ export class GameboardComponent implements OnInit {
       [0, 3, 6],
       [1, 4, 7],
       [2, 5, 8],
+      [0, 4, 8],
       [2, 4, 6],
     ];
 
