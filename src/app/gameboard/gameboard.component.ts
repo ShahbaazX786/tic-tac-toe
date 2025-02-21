@@ -73,7 +73,21 @@ export class GameboardComponent implements OnInit {
     if (this.winner) {
       this.playWinningEffect();
       this.updateGameState({ gameOn: this.gameOn, winner: this.winner });
+    } else if (this.squares.every((square) => square !== null)) {
+      this.playDrawEffect();
     }
+  }
+
+  playDrawEffect() {
+    this.audio = new Audio('/audio/error.mp3');
+    this.audio.load();
+    this.audio
+      .play()
+      .catch((error) => console.error('Audio play failed:', error));
+    this.audio.onended = () => {
+      console.log('Game Draw, game reset.');
+      this.gameOn = false;
+    };
   }
 
   playWinningEffect() {
