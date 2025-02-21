@@ -14,6 +14,7 @@ export class GameboardComponent implements OnInit {
   gameOn: boolean = false;
   gameData = new BehaviorSubject({});
   tileToggle = false;
+  audio: HTMLAudioElement | null = null;
 
   ngOnInit(): void {
     this.initializeGame();
@@ -70,8 +71,26 @@ export class GameboardComponent implements OnInit {
     this.winner = this.getWinner();
 
     if (this.winner) {
+      this.playWinningEffect();
       this.updateGameState({ gameOn: this.gameOn, winner: this.winner });
     }
+  }
+
+  playWinningEffect() {
+    if (this.audio && !this.audio.paused) {
+      return;
+    }
+
+    this.audio = new Audio('/audio/HaramMusic.mp3');
+    this.audio.load();
+
+    this.audio
+      .play()
+      .catch((error) => console.error('Audio play failed:', error));
+    this.audio.onended = () => {
+      this.gameOn = false;
+      console.log('Winning music finished, game reset.');
+    };
   }
 
   placeTileSound() {
