@@ -56,4 +56,8 @@ export class GameboardComponent implements OnInit {
     }
     return null;
   }
+
+  trackByFn(index: number, item: any): number {
+    return index; // Keeps the element identity stable
+  }
 }
