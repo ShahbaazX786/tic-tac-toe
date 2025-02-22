@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GameSoundService } from '../game-sound.service';
 import { GameStateService } from '../game-state.service';
 
@@ -7,7 +7,7 @@ import { GameStateService } from '../game-state.service';
   templateUrl: './gameboard.component.html',
   styleUrl: './gameboard.component.scss',
 })
-export class GameboardComponent {
+export class GameboardComponent implements OnInit {
   squares: any[] = [];
   isXNext: boolean = false;
   winner: string = '';
@@ -17,6 +17,12 @@ export class GameboardComponent {
     private gamestate: GameStateService,
     private gamesound: GameSoundService
   ) {}
+
+  ngOnInit(): void {
+    this.gamestate.gameData.subscribe((res) => {
+      this.gameOn = res.gameOn;
+    });
+  }
 
   beginNewGame() {
     this.gameOn = true;
