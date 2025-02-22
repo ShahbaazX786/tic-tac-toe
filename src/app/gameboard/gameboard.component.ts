@@ -1,61 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { GameStateType, updateGameStateType } from './../types';
+import { Component } from '@angular/core';
+import { GameSoundService } from '../game-sound.service';
+import { GameStateService } from '../game-state.service';
 
 @Component({
   selector: 'app-gameboard',
   templateUrl: './gameboard.component.html',
   styleUrl: './gameboard.component.scss',
 })
-export class GameboardComponent implements OnInit {
+export class GameboardComponent {
   squares: any[] = [];
   isXNext: boolean = false;
   winner: string = '';
   gameOn: boolean = false;
-  gameData = new BehaviorSubject({});
-  tileToggle = false;
-  audio: HTMLAudioElement | null = null;
 
-  ngOnInit(): void {
-    this.initializeGame();
-  }
-
-  initializeGame() {
-    this.gameData.next({
-      gameOn: false,
-      winner: [],
-      currentGame: 0,
-      highScore: 0,
-    });
-  }
+  constructor(
+    private gamestate: GameStateService,
+    private gamesound: GameSoundService
+  ) {}
 
   beginNewGame() {
     this.gameOn = true;
     this.squares = Array(9).fill(null);
     this.winner = '';
     this.isXNext = Math.random() < 0.5;
-    this.updateGameState({ gameOn: this.gameOn });
-  }
-
-  updateGameState({
-    gameOn,
-    winner,
-    currentGame,
-    highScore,
-  }: updateGameStateType) {
-    const currentData: GameStateType =
-      this.gameData.getValue() as GameStateType;
-
-    const updatedWinners = winner
-      ? currentData?.winners!.push(winner)
-      : currentData.winners;
-
-    this.gameData.next({
-      gameOn,
-      winner: updatedWinners,
-      currentGame,
-      highScore,
-    });
+    this.gamestate.updateGameState({ gameOn: this.gameOn });
   }
 
   get currentPlayer() {
@@ -63,7 +31,7 @@ export class GameboardComponent implements OnInit {
   }
 
   makeAMove(index: number) {
-    this.placeTileSound();
+    this.gamesound.placeTileSound();
     if (!this.squares[index]) {
       this.squares[index] = this.currentPlayer;
       this.isXNext = !this.isXNext;
@@ -71,50 +39,18 @@ export class GameboardComponent implements OnInit {
     this.winner = this.getWinner();
 
     if (this.winner) {
-      this.playWinningEffect();
-      this.updateGameState({ gameOn: this.gameOn, winner: this.winner });
+      this.gamesound.playWinningEffect();
+      this.gamestate.updateGameState({
+        gameOn: this.gameOn,
+        winner: this.winner,
+      });
     } else if (this.squares.every((square) => square !== null)) {
-      this.playDrawEffect();
+      this.gamesound.playDrawEffect();
     }
   }
 
-  playDrawEffect() {
-    this.audio = new Audio('/audio/error.mp3');
-    this.audio.load();
-    this.audio
-      .play()
-      .catch((error) => console.error('Audio play failed:', error));
-    this.audio.onended = () => {
-      console.log('Game Draw, game reset.');
-      this.gameOn = false;
-    };
-  }
-
-  playWinningEffect() {
-    if (this.audio && !this.audio.paused) {
-      return;
-    }
-
-    this.audio = new Audio('/audio/HaramMusic.mp3');
-    this.audio.load();
-
-    this.audio
-      .play()
-      .catch((error) => console.error('Audio play failed:', error));
-    this.audio.onended = () => {
-      this.gameOn = false;
-      console.log('Winning music finished, game reset.');
-    };
-  }
-
-  placeTileSound() {
-    const audioFile = this.tileToggle
-      ? '/audio/tile-1.mp3'
-      : '/audio/tile-2.mp3';
-    const audio = new Audio(audioFile);
-    audio.load();
-    audio.play().catch((error) => console.error('Audio play failed:', error));
-    this.tileToggle = !this.tileToggle;
+  trackByFn(index: number, item: any): number {
+    return index;
   }
 
   getWinner() {
@@ -139,9 +75,5 @@ export class GameboardComponent implements OnInit {
       }
     }
     return null;
-  }
-
-  trackByFn(index: number, item: any): number {
-    return index;
   }
 }
